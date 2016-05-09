@@ -1,4 +1,3 @@
-# ProjectDemo123
+# ProjectDemo123 Thang's version
 
-Thang edit
-Testing 1234 5678
+Edit via browser.
