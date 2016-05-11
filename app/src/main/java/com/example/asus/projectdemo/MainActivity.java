@@ -3,40 +3,34 @@ package com.example.asus.projectdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-
-    private RecyclerView mRecycleView;
+    public static final int NUM_OF_COLLUMN = 5;
+    public static final int NUM_OF_ROW = 6;
+    private GridView gridView;
+    private TextView txtView_question;
+    private ImageView imgView_question;
     Context context;
     private KeyboardButton[] keyboard_btn;
-    static String [] myDataset = {
-            "Test text 1",
-            "Test text 2",
-            "Test text 3",
-            "Test text 4",
-            "Test text 5",
-            "Test text 6",
-    };
+    static String [][] myDataset = new String[NUM_OF_COLLUMN][NUM_OF_ROW];//myDataset[x][y]
     private TextView testKeyboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        mRecycleView = (RecyclerView) findViewById(R.id.layout_recycleView);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        mRecycleView.setAdapter(new MyRecyclerAdapter(this, myDataset));
 
         setupKeyboard();
         setOnTouchKeyboard();
+        setupData();
         testKeyboard = (TextView)findViewById(R.id.testKeyboard);
         testKeyboard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +38,13 @@ public class MainActivity extends Activity {
                 testKeyboard.setText("");
             }
         });
+
+        txtView_question = (TextView)findViewById(R.id.textView);
+        imgView_question = (ImageView)findViewById(R.id.imageView);
+
+        gridView = (GridView) findViewById(R.id.layout_gridview);
+        gridView.setAdapter(new GridviewAdapter(getApplicationContext(),myDataset));
+        gridView.setNumColumns(NUM_OF_COLLUMN);
     }
 
     private void setupKeyboard()
@@ -81,11 +82,11 @@ public class MainActivity extends Activity {
     {
         for(int i = 0;i<keyboard_btn.length;i++)
         {
-            setOnClickButton(keyboard_btn[i]);
+            setOnClickEachButton(keyboard_btn[i]);
         }
     }
 
-    private void setOnClickButton(final KeyboardButton kbtn)
+    private void setOnClickEachButton(final KeyboardButton kbtn)
     {
         kbtn.button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +96,17 @@ public class MainActivity extends Activity {
         });
     }
 
+    private void setupData()
+    {
+        for(int i = 0;i<myDataset.length;i++)
+        {
+            for(int j = 0;j<myDataset[0].length;j++)//the board is rectangular
+            {
+                myDataset[i][j]="A";
+            }
+        }
+        myDataset[2][4] = GridviewAdapter.DISABLE;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -123,7 +135,6 @@ public class MainActivity extends Activity {
         String key;
         KeyboardButton(Button btn,String k)
         {
-
             button = btn;
             key = k;
         }
