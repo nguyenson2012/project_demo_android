@@ -18,9 +18,12 @@ public class MainActivity extends Activity {
     private GridView gridView;
     private TextView txtView_question;
     private ImageView imgView_question;
-    Context context;
+    private Context context;
     private KeyboardButton[] keyboard_btn;
-    static String [][] myDataset = new String[NUM_OF_COLLUMN][NUM_OF_ROW];//myDataset[x][y]
+    private String [][] gridViewData = new String[NUM_OF_COLLUMN][NUM_OF_ROW];//gridViewData[x][y]
+    private WordObjectsManager objManger = WordObjectsManager.getInstance();
+    private GridviewAdapter adapter;
+
     private TextView testKeyboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +31,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         context = this;
 
+        setupGridView();
+        adapter = new GridviewAdapter(getApplicationContext(), gridViewData);
+        gridView = (GridView) findViewById(R.id.layout_gridview);
+        gridView.setAdapter(adapter);
+        gridView.setNumColumns(NUM_OF_COLLUMN);
+
         setupKeyboard();
         setOnTouchKeyboard();
-        setupData();
         testKeyboard = (TextView)findViewById(R.id.testKeyboard);
         testKeyboard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,9 +50,6 @@ public class MainActivity extends Activity {
         txtView_question = (TextView)findViewById(R.id.textView);
         imgView_question = (ImageView)findViewById(R.id.imageView);
 
-        gridView = (GridView) findViewById(R.id.layout_gridview);
-        gridView.setAdapter(new GridviewAdapter(getApplicationContext(),myDataset));
-        gridView.setNumColumns(NUM_OF_COLLUMN);
     }
 
     private void setupKeyboard()
@@ -84,6 +89,7 @@ public class MainActivity extends Activity {
         {
             setOnClickEachButton(keyboard_btn[i]);
         }
+//        adapter.notifyDataSetChanged();
     }
 
     private void setOnClickEachButton(final KeyboardButton kbtn)
@@ -92,20 +98,48 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 testKeyboard.setText(testKeyboard.getText() + kbtn.key);
+                try {
+                    gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()]=kbtn.key;
+                    adapter.nextClickedPosition();
+                    adapter.notifyDataSetChanged();
+                }
+                catch (Exception e)
+                {
+                    Log.e("MainActivity","Not Clicked any cell yet.");
+                }
             }
         });
     }
 
-    private void setupData()
+    private void initializeQuestion()
     {
-        for(int i = 0;i<myDataset.length;i++)
+        objManger.add(new WordObject(0,0,"Test Question 1","aaa1",WordObject.HORIZONTAL));
+        objManger.add(new WordObject(3,2,"Test Question 2","bb2",WordObject.VERTICAL));
+        objManger.add(new WordObject(0,4,"Test Question 3","cccc3",WordObject.HORIZONTAL));
+        objManger.add(new WordObject(1,2,"Test Question 1","zz4",WordObject.HORIZONTAL));
+        objManger.add(new WordObject(1,0,"Test Question 1","pp4",WordObject.VERTICAL));
+    }
+    private void setupGridView()
+    {
+        initializeQuestion();
+        //Reset gridview
+        for(int i = 0;i< gridViewData.length;i++)
         {
-            for(int j = 0;j<myDataset[0].length;j++)//the board is rectangular
+            for(int j = 0;j< gridViewData[0].length;j++)//the board is rectangular
             {
-                myDataset[i][j]="A";
+                WordObject temp = objManger.getObjectAt(i,j);
+                if(temp!=null)
+                {
+                    gridViewData[i][j]=GridviewAdapter.ENABLE;
+//                    Log.e("OBJ","i,j = "+i+" , "+j);
+                }
+                else
+                {
+                    gridViewData[i][j]=GridviewAdapter.DISABLE;
+//                    Log.e("NULL","i,j = "+i+" , "+j);
+                }
             }
         }
-        myDataset[2][4] = GridviewAdapter.DISABLE;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
