@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
     public static final int NUM_OF_COLLUMN = 5;
@@ -24,7 +25,7 @@ public class MainActivity extends Activity {
     private WordObjectsManager objManger = WordObjectsManager.getInstance();
     private GridviewAdapter adapter;
 
-    private TextView testKeyboard;
+    private Button btCheckAnswer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,16 +40,19 @@ public class MainActivity extends Activity {
 
         setupKeyboard();
         setOnTouchKeyboard();
-        testKeyboard = (TextView)findViewById(R.id.testKeyboard);
-        testKeyboard.setOnClickListener(new View.OnClickListener() {
+
+        txtView_question = (TextView)findViewById(R.id.textViewQuestion);
+        imgView_question = (ImageView)findViewById(R.id.imageView);
+        btCheckAnswer=(Button)findViewById(R.id.btcheckAnswer);
+        btCheckAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                testKeyboard.setText("");
+            public void onClick(View v) {
+                if(checkAnswer())
+                    Toast.makeText(getApplicationContext(),"You Win",Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(),"You Lose",Toast.LENGTH_SHORT).show();
             }
         });
-
-        txtView_question = (TextView)findViewById(R.id.textView);
-        imgView_question = (ImageView)findViewById(R.id.imageView);
 
     }
 
@@ -97,7 +101,7 @@ public class MainActivity extends Activity {
         kbtn.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testKeyboard.setText(testKeyboard.getText() + kbtn.key);
+                txtView_question.setText(txtView_question.getText() + kbtn.key);
                 try {
                     gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()]=kbtn.key;
                     adapter.nextClickedPosition();
@@ -113,11 +117,9 @@ public class MainActivity extends Activity {
 
     private void initializeQuestion()
     {
-        objManger.add(new WordObject(0,0,"Test Question 1","aaa1",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(3,2,"Test Question 2","bb2",WordObject.VERTICAL));
-        objManger.add(new WordObject(0,4,"Test Question 3","cccc3",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(1,2,"Test Question 1","zz4",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(1,0,"Test Question 1","pp4",WordObject.VERTICAL));
+        objManger.add(new WordObject(0,0,"I am ...... a book","READ",WordObject.HORIZONTAL));
+        objManger.add(new WordObject(0,2,"..... up!","STAND",WordObject.HORIZONTAL));
+        objManger.add(new WordObject(1, 0, "I ... a humberger", "EAT", WordObject.VERTICAL));
     }
     private void setupGridView()
     {
@@ -140,6 +142,29 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+    private boolean checkAnswer(){
+        boolean checkAnswer=true;
+        for(WordObject question:objManger.getObjectArrayList()){
+            String answer="";
+            int firstX=question.startX;
+            int firstY=question.startY;
+            if(question.getOrientation()==WordObject.HORIZONTAL){
+                for(int i=0;i<question.getResult().length();i++){
+                    answer=answer.concat(gridViewData[firstX+i][firstY]);
+                }
+                if(!answer.equals(question.getResult()))
+                    checkAnswer=false;
+            }else {
+                for(int i=0;i<question.getResult().length();i++){
+                    answer=answer.concat(gridViewData[firstX][firstY+i]);
+                }
+                if(!answer.equals(question.getResult()))
+                    checkAnswer=false;
+            }
+
+        }
+        return checkAnswer;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

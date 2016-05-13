@@ -29,7 +29,7 @@
             android:src="@android:drawable/btn_star_big_on"/>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewQuestion"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,10 +221,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+    <Button
+        android:id="@+id/btcheckAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
-        android:text="Test Keyboard Here."
-        android:id="@+id/testKeyboard"/>
+        android:text="@string/check_answer"/>
 </LinearLayout>

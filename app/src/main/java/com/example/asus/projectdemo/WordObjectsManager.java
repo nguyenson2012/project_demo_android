@@ -61,4 +61,12 @@ public class WordObjectsManager {
         }
         return obj;
     }
+
+    public ArrayList<WordObject> getObjectArrayList() {
+        return objectArrayList;
+    }
+
+    public void setObjectArrayList(ArrayList<WordObject> objectArrayList) {
+        this.objectArrayList = objectArrayList;
+    }
 }
