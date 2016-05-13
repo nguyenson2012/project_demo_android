@@ -2,6 +2,7 @@ package com.example.asus.projectdemo;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class GridviewAdapter extends BaseAdapter {
         color = new int[data.length][data[0].length];
         resetColor();
     }
-    private void resetColor()
+    public void resetColor()
     {
         for(int i = 0;i<color.length;i++)
         {
@@ -39,6 +40,7 @@ public class GridviewAdapter extends BaseAdapter {
                 color[i][j]=NORMAL;
             }
         }
+        notifyDataSetChanged();
     }
     @Override
     public int getCount() {
@@ -75,9 +77,13 @@ public class GridviewAdapter extends BaseAdapter {
         }
 
         final Button cell = (Button)gridView.findViewById(R.id.button);
+        //set Row Height
+        cell.setHeight(MainActivity.getRowHeight());
+        cell.setMinimumHeight(MainActivity.getRowHeight());
+
 //        cell.setText(Integer.toString(position));
-        final int positionX = position%MainActivity.NUM_OF_COLLUMN;
-        final int positionY = position/MainActivity.NUM_OF_COLLUMN;
+        final int positionX = position%MainActivity.NAM_OF_COLUMN;
+        final int positionY = position/MainActivity.NAM_OF_COLUMN;
         if(data[positionX][positionY] == DISABLE)//find the chosen cell, If can not compare, test with temp.equal(DISABLE)
         {
             cell.setVisibility(View.INVISIBLE);
@@ -101,7 +107,6 @@ public class GridviewAdapter extends BaseAdapter {
             cell.setBackgroundColor(Color.BLUE);
         }
 
-        //Check again : remove final cell, change the color data, require word length, onclick => return normal other cells, color next cells
         cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,35 +126,14 @@ public class GridviewAdapter extends BaseAdapter {
         {
             obj.setClickedPosition(x,y);
             clickedOject = obj;
-            /*color[x][y]=MAIN_CLICKED;
-            int tempX=x+1;// color the subclicked on the right
-            while (tempX<data.length&&obj.isInsideWord(tempX,y))
-            {
-                color[tempX][y]=SUB_CLICKED;
-                tempX++;
-            }
-            tempX=x-1;// color the subclicked on the right
-            while (tempX>=0&&obj.isInsideWord(tempX,y))
-            {
-                color[tempX][y]=SUB_CLICKED;
-                tempX--;
-            }
-
-            int tempY=y+1;// color the subclicked downward
-            while (tempY<data[0].length&&obj.isInsideWord(x,tempY))
-            {
-                color[x][tempY]=SUB_CLICKED;
-                tempY++;
-            }
-            tempY=y-1;// color the subclicked upward
-            while (tempY>=0&&obj.isInsideWord(x,tempY))
-            {
-                color[x][tempY]=SUB_CLICKED;
-                tempY--;
-            }*/
             colorSurroundCells(x,y);
+//            Log.e("Adapter", "Clicked Word Cell; x,y = "+x+" , "+y);
         }
-//        notifyDataSetChanged();
+//        else
+//        {
+//            Log.e("Adapter","Clicked Blank Cell; x,y = "+x+" , "+y);
+//            resetColor();
+//        }
     }
 
     private void colorSurroundCells(int x, int y)// x,y is the starting point, cell is the work obj to check its length
