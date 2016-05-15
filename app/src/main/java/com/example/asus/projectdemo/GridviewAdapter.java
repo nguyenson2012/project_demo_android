@@ -78,12 +78,11 @@ public class GridviewAdapter extends BaseAdapter {
 
         final Button cell = (Button)gridView.findViewById(R.id.button);
         //set Row Height
-        cell.setHeight(MainActivity.getRowHeight());
-        cell.setMinimumHeight(MainActivity.getRowHeight());
+        cell.setText(Integer.toString(position));
 
 //        cell.setText(Integer.toString(position));
-        final int positionX = position%MainActivity.NAM_OF_COLUMN;
-        final int positionY = position/MainActivity.NAM_OF_COLUMN;
+        final int positionX = position%MainActivity.NUM_OF_COLLUMN;
+        final int positionY = position/MainActivity.NUM_OF_COLLUMN;
         if(data[positionX][positionY] == DISABLE)//find the chosen cell, If can not compare, test with temp.equal(DISABLE)
         {
             cell.setVisibility(View.INVISIBLE);

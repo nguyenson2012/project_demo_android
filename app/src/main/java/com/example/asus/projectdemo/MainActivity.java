@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
     public static final int NUM_OF_COLLUMN = 5;
@@ -23,8 +25,10 @@ public class MainActivity extends Activity {
     private String [][] gridViewData = new String[NUM_OF_COLLUMN][NUM_OF_ROW];//gridViewData[x][y]
     private WordObjectsManager objManger = WordObjectsManager.getInstance();
     private GridviewAdapter adapter;
+    private Button btCheckAnswer;
+    private Button btSolve;
+    private Button btClear;
 
-    private TextView testKeyboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,15 +43,6 @@ public class MainActivity extends Activity {
 
         setupKeyboard();
         setOnTouchKeyboard();
-        testKeyboard = (TextView)findViewById(R.id.testKeyboard);
-        testKeyboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                testKeyboard.setText("");
-            }
-        });
-
-        txtView_question = (TextView)findViewById(R.id.textView);
         imgView_question = (ImageView)findViewById(R.id.imageView);
 
     }
@@ -81,6 +76,10 @@ public class MainActivity extends Activity {
         keyboard_btn[23]= new KeyboardButton((Button)findViewById(R.id.btnB),"B");
         keyboard_btn[24]= new KeyboardButton((Button)findViewById(R.id.btnN),"N");
         keyboard_btn[25]= new KeyboardButton((Button)findViewById(R.id.btnM),"M");
+        btCheckAnswer=(Button)findViewById(R.id.btcheckAnswer);
+        btSolve=(Button)findViewById(R.id.btSolve);
+        btClear=(Button)findViewById(R.id.btClear);
+        txtView_question=(TextView)findViewById(R.id.textViewQuestion);
     }
 
     private void setOnTouchKeyboard()
@@ -89,7 +88,50 @@ public class MainActivity extends Activity {
         {
             setOnClickEachButton(keyboard_btn[i]);
         }
+        btCheckAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkAnswer())
+                    Toast.makeText(getApplicationContext(),"You Win",Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(),"You Lose",Toast.LENGTH_SHORT).show();
+            }
+        });
+        btSolve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solveLevel();
+            }
+        });
+        btClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearLevel();
+            }
+        });
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int positionX=position%NUM_OF_COLLUMN;
+                int positionY=position/NUM_OF_COLLUMN;
+                changeQuestion(positionX,positionY);
+            }
+        });
 //        adapter.notifyDataSetChanged();
+    }
+
+    private void changeQuestion(int positionX, int positionY) {
+        for(WordObject question:objManger.getObjectArrayList()){
+            int firstX=question.startX;
+            int firstY=question.startY;
+            if(question.getOrientation()==WordObject.HORIZONTAL){
+                if(firstY==positionY)
+                    txtView_question.setText(question.getQuestion());
+            }else {
+                if(firstX==positionX)
+                    txtView_question.setText(question.getQuestion());
+            }
+        }
     }
 
     private void setOnClickEachButton(final KeyboardButton kbtn)
@@ -97,15 +139,12 @@ public class MainActivity extends Activity {
         kbtn.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testKeyboard.setText(testKeyboard.getText() + kbtn.key);
                 try {
-                    gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()]=kbtn.key;
+                    gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()] = kbtn.key;
                     adapter.nextClickedPosition();
                     adapter.notifyDataSetChanged();
-                }
-                catch (Exception e)
-                {
-                    Log.e("MainActivity","Not Clicked any cell yet.");
+                } catch (Exception e) {
+                    Log.e("MainActivity", "Not Clicked any cell yet.");
                 }
             }
         });
@@ -113,11 +152,9 @@ public class MainActivity extends Activity {
 
     private void initializeQuestion()
     {
-        objManger.add(new WordObject(0,0,"Test Question 1","aaa1",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(3,2,"Test Question 2","bb2",WordObject.VERTICAL));
-        objManger.add(new WordObject(0,4,"Test Question 3","cccc3",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(1,2,"Test Question 1","zz4",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(1,0,"Test Question 1","pp4",WordObject.VERTICAL));
+        objManger.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL));
+        objManger.add(new WordObject(0,2,"...... up!","STAND",WordObject.HORIZONTAL));
+        objManger.add(new WordObject(1,0,"I .... a humburger","EAT",WordObject.VERTICAL));
     }
     private void setupGridView()
     {
@@ -173,4 +210,62 @@ public class MainActivity extends Activity {
             key = k;
         }
     }
+    private boolean checkAnswer(){
+        boolean checkAnswer=true;
+        for(WordObject question:objManger.getObjectArrayList()){
+            String answer="";
+            int firstX=question.startX;
+            int firstY=question.startY;
+            if(question.getOrientation()==WordObject.HORIZONTAL){
+                for(int i=0;i<question.getResult().length();i++){
+                    answer=answer.concat(gridViewData[firstX + i][firstY]);
+                }
+                if(!answer.equals(question.getResult()))
+                    checkAnswer=false;
+            }else {
+                for(int i=0;i<question.getResult().length();i++){
+                    answer=answer.concat(gridViewData[firstX][firstY + i]);
+                }
+                if(!answer.equals(question.getResult()))
+                    checkAnswer=false;
+            }
+
+        }
+        return checkAnswer;
+    }
+
+    private void solveLevel(){
+        for(WordObject question:objManger.getObjectArrayList()){
+            String answer=question.getResult();
+            int firstX=question.startX;
+            int firstY=question.startY;
+            if(question.getOrientation()==WordObject.HORIZONTAL){
+                for(int i=0;i<question.getResult().length();i++){
+                    gridViewData[firstX+i][firstY]=answer.substring(i, i + 1);
+                }
+            }else {
+                for(int i=0;i<question.getResult().length();i++){
+                    gridViewData[firstX][firstY+i]=answer.substring(i, i + 1);
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+    private void clearLevel(){
+        for(WordObject question:objManger.getObjectArrayList()){
+            int firstX=question.startX;
+            int firstY=question.startY;
+            if(question.getOrientation()==WordObject.HORIZONTAL){
+                for(int i=0;i<question.getResult().length();i++){
+                    gridViewData[firstX+i][firstY]="";
+                }
+            }else {
+                for(int i=0;i<question.getResult().length();i++){
+                    gridViewData[firstX][firstY+i]="";
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 }

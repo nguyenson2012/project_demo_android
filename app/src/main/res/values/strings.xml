@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="check_answer">Check Answer</string>
+    <string name="solve">SOLVE</string>
+    <string name="clear">CLEAR</string>
 </resources>
