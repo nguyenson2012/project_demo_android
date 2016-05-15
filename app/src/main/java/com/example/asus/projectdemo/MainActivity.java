@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GridviewAdapter.OnItemGridViewClick {
     public static final int NUM_OF_COLLUMN = 5;
     public static final int NUM_OF_ROW = 6;
     private GridView gridView;
@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
         context = this;
 
         setupGridView();
-        adapter = new GridviewAdapter(getApplicationContext(), gridViewData);
+        adapter = new GridviewAdapter(MainActivity.this, gridViewData);
         gridView = (GridView) findViewById(R.id.layout_gridview);
         gridView.setAdapter(adapter);
         gridView.setNumColumns(NUM_OF_COLLUMN);
@@ -107,14 +107,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 clearLevel();
-            }
-        });
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int positionX=position%NUM_OF_COLLUMN;
-                int positionY=position/NUM_OF_COLLUMN;
-                changeQuestion(positionX,positionY);
             }
         });
 //        adapter.notifyDataSetChanged();
@@ -198,6 +190,13 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemGridViewClick(int position) {
+        int positionX=position%NUM_OF_COLLUMN;
+        int positionY=position/NUM_OF_COLLUMN;
+        changeQuestion(positionX,positionY);
     }
 
     class KeyboardButton

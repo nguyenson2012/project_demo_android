@@ -12,6 +12,7 @@ public class WordObject {
     public int startX;
     public int startY;
     private int orientation;
+    private String imageLink;
     private static int clickedPositionX;
     private static int clickedPositionY;
 
@@ -86,6 +87,14 @@ public class WordObject {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public int getOrientation() {

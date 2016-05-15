@@ -1,5 +1,6 @@
 package com.example.asus.projectdemo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -22,10 +23,11 @@ public class GridviewAdapter extends BaseAdapter {
     public static final int MAIN_CLICKED = 3;
     public static final int SUB_CLICKED = 4;
     private static WordObject clickedOject = null;
+    private OnItemGridViewClick gridViewClickListener;
     //Constructor to initialize values
     WordObjectsManager objManager = WordObjectsManager.getInstance();
-    public GridviewAdapter(Context context, String[][] data) {
-
+    public GridviewAdapter(Activity context, String[][] data) {
+        this.gridViewClickListener=(OnItemGridViewClick)context;
         this.context = context;
         this.data = data;
         color = new int[data.length][data[0].length];
@@ -59,7 +61,7 @@ public class GridviewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // LayoutInflater to call external grid_item.xml file
 
         LayoutInflater inflater = (LayoutInflater) context
@@ -110,6 +112,7 @@ public class GridviewAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 onClickCell(positionX,positionY);
+                gridViewClickListener.onItemGridViewClick(position);
             }
         });
         return gridView;
@@ -188,5 +191,9 @@ public class GridviewAdapter extends BaseAdapter {
 //        onClickCell(WordObject.getClickedPositionX(), WordObject.getClickedPositionY());
 
         colorSurroundCells(lastClickedX,lastClickedY);
+    }
+
+    public interface OnItemGridViewClick{
+        public void onItemGridViewClick(int position);
     }
 }
