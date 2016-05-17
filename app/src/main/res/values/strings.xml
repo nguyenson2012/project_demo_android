@@ -6,4 +6,11 @@
     <string name="check_answer">Check Answer</string>
     <string name="solve">SOLVE</string>
     <string name="clear">CLEAR</string>
+    <string name="Answer">Answer</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="developer_email">email</string>
+    <string name="subject_email">email</string>
+    <string name="link_google_play_for_share">link</string>
+    <string name="share_app_title">Share Now</string>
 </resources>
