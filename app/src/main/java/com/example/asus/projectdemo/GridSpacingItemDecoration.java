@@ -34,7 +34,9 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             outRect.bottom = spacing; // item bottom
         } else {
             outRect.left = column * spacing / spanCount+40; // column * ((1f / spanCount) * spacing)
-            outRect.right = spacing - (column + 1) * spacing / spanCount+55; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+            outRect.right = spacing - (column + 1) * spacing / spanCount+55;
+            outRect.top=50;
+            // spacing - (column + 1) * ((1f /    spanCount) * spacing)
             if (position >= spanCount) {
                 //outRect.top = spacing; // item top
             }

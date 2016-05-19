@@ -5,6 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
 import java.util.List;
 /**
  * Created by SON on 3/21/2016.
@@ -31,6 +34,8 @@ public class GridViewLevelAdapter extends RecyclerView.Adapter<RecyclerViewHolde
     public void onBindViewHolder(RecyclerViewHolders holder, int position) {
         holder.imageLevel.setImageResource(R.drawable.background_puzzle);
         holder.textViewLevel.setText(levelCardItems.get(position).getLevelTitle());
+        Animation animation= AnimationUtils.loadAnimation(context,R.anim.recycler_level_anim);
+        holder.cardView.startAnimation(animation);
     }
 
     @Override

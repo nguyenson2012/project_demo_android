@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private RecyclerView recyclerViewLevel;
     private ArrayList<LevelCardItem> levelCardItems;
     private GridLayoutManager gridLayoutManager;
-    int spanCount = 2;
+    int column = 2;
     int spacing = 175;
     boolean includeEdge = false;
 
@@ -67,7 +67,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
         recyclerViewLevel.setLayoutManager(gridLayoutManager);
         GridViewLevelAdapter rcAdapter = new GridViewLevelAdapter(HomeActivity.this, levelCardItems);
         recyclerViewLevel.setAdapter(rcAdapter);
-        recyclerViewLevel.addItemDecoration(new GridSpacingItemDecoration(spanCount,spacing,includeEdge));
+        recyclerViewLevel.addItemDecoration(new GridSpacingItemDecoration(column,spacing,includeEdge));
     }
 
     private void setDefaultDataLevel() {
