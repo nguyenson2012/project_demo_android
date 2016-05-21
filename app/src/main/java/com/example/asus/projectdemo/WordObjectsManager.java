@@ -57,6 +57,8 @@ public class WordObjectsManager {
             if(objectArrayList.get(i).isInsideWord(x,y))
             {
                 obj = objectArrayList.get(i);
+                if(objectArrayList.get(i).startX==x&&objectArrayList.get(i).startY==y)//return if click the first letter of word
+                    return obj;
             }
         }
         return obj;

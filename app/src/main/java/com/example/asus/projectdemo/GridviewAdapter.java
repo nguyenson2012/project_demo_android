@@ -3,10 +3,11 @@ package com.example.asus.projectdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
@@ -17,6 +18,7 @@ public class GridviewAdapter extends BaseAdapter {
     private Context context;
     private String data[][];//The board must be rectangular + data[x][y]
     private static int color[][];//The board must be rectangular + data[x][y]
+    private static boolean isAnimation[][];//The board must be rectangular + data[x][y]
     public static final String DISABLE = "0";
     public static final String ENABLE = "";
     public static final int NORMAL = 2;
@@ -24,14 +26,24 @@ public class GridviewAdapter extends BaseAdapter {
     public static final int SUB_CLICKED = 4;
     private static WordObject clickedOject = null;
     private OnItemGridViewClick gridViewClickListener;
-    //Constructor to initialize values
+    private Animation animation;
+    //Constructor to resetColor values
     WordObjectsManager objManager = WordObjectsManager.getInstance();
     public GridviewAdapter(Activity context, String[][] data) {
         this.gridViewClickListener=(OnItemGridViewClick)context;
         this.context = context;
         this.data = data;
         color = new int[data.length][data[0].length];
+        isAnimation = new boolean[data.length][data[0].length];
+        for(int i = 0;i<color.length;i++)
+        {
+            for(int j = 0;j<color[0].length;j++)//the board is rectangular
+            {
+                isAnimation[i][j]=false;
+            }
+        }
         resetColor();
+        animation = AnimationUtils.loadAnimation(context, R.anim.start_gridview_anim);
     }
     public void resetColor()
     {
@@ -62,6 +74,7 @@ public class GridviewAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
         // LayoutInflater to call external grid_item.xml file
 
         LayoutInflater inflater = (LayoutInflater) context
@@ -80,24 +93,34 @@ public class GridviewAdapter extends BaseAdapter {
 
         final Button cell = (Button)gridView.findViewById(R.id.button);
         //set Row Height
-        cell.setText(Integer.toString(position));
+        cell.setMinimumHeight(0);
+        cell.setHeight(MainActivity.getRowHeight());
 
-//        cell.setText(Integer.toString(position));
+        //set default text
+        cell.setText(Integer.toString(position));
+        cell.setTextColor(Color.BLACK);
         final int positionX = position%MainActivity.NUM_OF_COLLUMN;
         final int positionY = position/MainActivity.NUM_OF_COLLUMN;
         if(data[positionX][positionY] == DISABLE)//find the chosen cell, If can not compare, test with temp.equal(DISABLE)
         {
             cell.setVisibility(View.INVISIBLE);
+            isAnimation[positionX][positionY]=true;
         }
-        else
-        {
+        else {
             cell.setVisibility(View.VISIBLE);
             cell.setText(data[positionX][positionY]);
+            if(!isAnimation[positionX][positionY])
+            {
+                cell.startAnimation(animation);
+                isAnimation[positionX][positionY]=true;
+            }
+//            cell.setTextSize(15);
+//            Log.e("ADAPTER","x= "+positionX+" , y= "+positionY+" , setText = "+data[positionX][positionY]);
         }
 
         if(color[positionX][positionY] == NORMAL)
         {
-            cell.setBackgroundColor(Color.GRAY);
+            cell.setBackgroundColor(Color.WHITE);
         }
         else if(color[positionX][positionY] == MAIN_CLICKED)
         {
@@ -105,7 +128,7 @@ public class GridviewAdapter extends BaseAdapter {
         }
         else if(color[positionX][positionY] == SUB_CLICKED)
         {
-            cell.setBackgroundColor(Color.BLUE);
+            cell.setBackgroundColor(Color.YELLOW);
         }
 
         cell.setOnClickListener(new View.OnClickListener() {

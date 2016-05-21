@@ -2,8 +2,14 @@ package com.example.asus.projectdemo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +20,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements GridviewAdapter.OnItemGridViewClick {
-    public static final int NUM_OF_COLLUMN = 5;
-    public static final int NUM_OF_ROW = 6;
-    private GridView gridView;
+public class MainActivity extends Activity implements GridviewAdapter.OnItemGridViewClick{
+    public static final int NUM_OF_COLLUMN = 13;
+    public static final int NUM_OF_ROW = 13;
+    public static final int NUM_OF_KEYBOARD_PER_ROW = 10;
+    private static GridView gridView;
     private TextView txtView_question;
     private ImageView imgView_question;
     private Context context;
@@ -36,20 +43,20 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         context = this;
 
         setupGridView();
-        adapter = new GridviewAdapter(MainActivity.this, gridViewData);
-        gridView = (GridView) findViewById(R.id.layout_gridview);
-        gridView.setAdapter(adapter);
-        gridView.setNumColumns(NUM_OF_COLLUMN);
-
         setupKeyboard();
-        setOnTouchKeyboard();
+
+//        txtView_question = (TextView)findViewById(R.id.textView);
         imgView_question = (ImageView)findViewById(R.id.imageView);
 
     }
 
+    public static int getRowHeight()//for adapter
+    {
+        return (int) ((gridView.getHeight() / NUM_OF_ROW) * 0.9);
+    }
     private void setupKeyboard()
     {
-        keyboard_btn = new KeyboardButton[26];
+        keyboard_btn = new KeyboardButton[27];
         keyboard_btn[0]= new KeyboardButton((Button)findViewById(R.id.btnQ),"Q");
         keyboard_btn[1]= new KeyboardButton((Button)findViewById(R.id.btnW),"W");
         keyboard_btn[2]= new KeyboardButton((Button)findViewById(R.id.btnE),"E");
@@ -76,10 +83,22 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         keyboard_btn[23]= new KeyboardButton((Button)findViewById(R.id.btnB),"B");
         keyboard_btn[24]= new KeyboardButton((Button)findViewById(R.id.btnN),"N");
         keyboard_btn[25]= new KeyboardButton((Button)findViewById(R.id.btnM),"M");
+        keyboard_btn[26]= new KeyboardButton((Button)findViewById(R.id.btnDel),"Del");
         btCheckAnswer=(Button)findViewById(R.id.btcheckAnswer);
         btSolve=(Button)findViewById(R.id.btSolve);
         btClear=(Button)findViewById(R.id.btClear);
         txtView_question=(TextView)findViewById(R.id.textViewQuestion);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        for(int i = 0;i<keyboard_btn.length;i++)
+        {
+            keyboard_btn[i].button.setMinimumWidth(0);
+            keyboard_btn[i].button.setWidth(metrics.widthPixels/(NUM_OF_KEYBOARD_PER_ROW+1));
+        }
+
+        setOnTouchKeyboard();
     }
 
     private void setOnTouchKeyboard()
@@ -128,25 +147,44 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
 
     private void setOnClickEachButton(final KeyboardButton kbtn)
     {
-        kbtn.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()] = kbtn.key;
-                    adapter.nextClickedPosition();
-                    adapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    Log.e("MainActivity", "Not Clicked any cell yet.");
+        if(kbtn.key!="Del")
+        {
+            kbtn.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()] = kbtn.key;
+                        adapter.nextClickedPosition();
+                        adapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        Log.e("MainActivity", "Not Clicked any cell yet.");
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            kbtn.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()] = "";
+//                        adapter.nextClickedPosition();
+                        adapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        Log.e("MainActivity", "Not Clicked any cell yet.");
+                    }
+                }
+            });
+        }
     }
 
     private void initializeQuestion()
     {
+        objManger.add(new WordObject(1, 0, "I .... a hamburger", "EAT", WordObject.VERTICAL));
+        objManger.add(new WordObject(1, 1, "I have an ", "ARMY", WordObject.HORIZONTAL));
         objManger.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL));
-        objManger.add(new WordObject(0,2,"...... up!","STAND",WordObject.HORIZONTAL));
-        objManger.add(new WordObject(1,0,"I .... a humburger","EAT",WordObject.VERTICAL));
+        objManger.add(new WordObject(0, 2, "...... up!", "STAND", WordObject.HORIZONTAL));
     }
     private void setupGridView()
     {
@@ -169,6 +207,27 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
                 }
             }
         }
+        adapter = new GridviewAdapter(this, gridViewData);
+        gridView = (GridView) findViewById(R.id.layout_gridview);
+        gridView.setAdapter(adapter);
+        gridView.setNumColumns(NUM_OF_COLLUMN);
+//        gridView.setColumnWidth((int) ((gridView.getWidth() / NUM_OF_COLLUMN) * 0.9));
+
+        setGridViewBG();
+    }
+    private void setGridViewBG()
+    {
+        Drawable bgDrawable = getResources().getDrawable(R.drawable.gridview_bg);
+
+        //Scale the images
+        Bitmap bitmap = ((BitmapDrawable) bgDrawable).getBitmap();
+        Drawable drawable = new BitmapDrawable(
+                getResources(), Bitmap.createScaledBitmap(bitmap,
+                bitmap.getWidth() / 4,
+                bitmap.getHeight() / 4,
+                true)
+        );
+        gridView.setBackground(drawable);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,7 +251,7 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+//    @Override
     public void onItemGridViewClick(int position) {
         int positionX=position%NUM_OF_COLLUMN;
         int positionY=position/NUM_OF_COLLUMN;
