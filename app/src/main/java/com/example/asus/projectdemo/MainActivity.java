@@ -131,8 +131,8 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
 //        adapter.notifyDataSetChanged();
     }
 
-    private void changeQuestion(int positionX, int positionY) {
-        for(WordObject question:objManger.getObjectArrayList()){
+    /*private void changeQuestion(int positionX, int positionY) {
+        *//*for(WordObject question:objManger.getObjectArrayList()){
             int firstX=question.startX;
             int firstY=question.startY;
             if(question.getOrientation()==WordObject.HORIZONTAL){
@@ -142,8 +142,9 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
                 if(firstX==positionX)
                     txtView_question.setText(question.getQuestion());
             }
-        }
-    }
+        }*//*
+        txtView_question.setText(objManger.getObjectAt(positionX,positionY).getQuestion());
+    }*/
 
     private void setOnClickEachButton(final KeyboardButton kbtn)
     {
@@ -255,7 +256,8 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
     public void onItemGridViewClick(int position) {
         int positionX=position%NUM_OF_COLLUMN;
         int positionY=position/NUM_OF_COLLUMN;
-        changeQuestion(positionX,positionY);
+//        changeQuestion(positionX,positionY);
+        txtView_question.setText(objManger.getObjectAt(positionX,positionY).getQuestion());
     }
 
     class KeyboardButton
