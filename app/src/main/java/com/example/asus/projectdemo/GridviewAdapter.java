@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 /**
  * Created by ThangDuong on 12-May-16.
@@ -24,6 +25,7 @@ public class GridviewAdapter extends BaseAdapter {
     public static final int NORMAL = 2;
     public static final int MAIN_CLICKED = 3;
     public static final int SUB_CLICKED = 4;
+    public static final int TRANSPARENT = 5;
     private static WordObject clickedOject = null;
     private OnItemGridViewClick gridViewClickListener;
     private Animation animation;
@@ -51,7 +53,11 @@ public class GridviewAdapter extends BaseAdapter {
         {
             for(int j = 0;j<color[0].length;j++)//the board is rectangular
             {
-                color[i][j]=NORMAL;
+                WordObject obj = objManager.getObjectAt(i, j);
+                if(obj!=null)
+                    color[i][j]=NORMAL;
+                else
+                    color[i][j]=TRANSPARENT;
             }
         }
         notifyDataSetChanged();
@@ -92,26 +98,36 @@ public class GridviewAdapter extends BaseAdapter {
         }
 
         final Button cell = (Button)gridView.findViewById(R.id.button);
+        final LinearLayout backGround = (LinearLayout)gridView.findViewById(R.id.BGLinear);
         //set Row Height
         cell.setMinimumHeight(0);
         cell.setHeight(MainActivity.getRowHeight());
 
         //set default text
-        cell.setText(Integer.toString(position));
+//        cell.setText(Integer.toString(position));
         cell.setTextColor(Color.BLACK);
         final int positionX = position%MainActivity.NUM_OF_COLLUMN;
         final int positionY = position/MainActivity.NUM_OF_COLLUMN;
         if(data[positionX][positionY] == DISABLE)//find the chosen cell, If can not compare, test with temp.equal(DISABLE)
         {
-            cell.setVisibility(View.INVISIBLE);
+//            cell.setVisibility(View.INVISIBLE);
+            cell.setClickable(false);
+            cell.setFocusable(false);
+            cell.setEnabled(false);
+            cell.setBackgroundColor(Color.TRANSPARENT);
+            backGround.setBackgroundColor(Color.TRANSPARENT);
+            gridView.setEnabled(false);
+            gridView.setFocusable(false);
+            gridView.setClickable(false);
             isAnimation[positionX][positionY]=true;
         }
         else {
-            cell.setVisibility(View.VISIBLE);
+//            cell.setVisibility(View.VISIBLE);
             cell.setText(data[positionX][positionY]);
+
             if(!isAnimation[positionX][positionY])
             {
-                cell.startAnimation(animation);
+                backGround.startAnimation(animation);
                 isAnimation[positionX][positionY]=true;
             }
 //            cell.setTextSize(15);
@@ -120,15 +136,23 @@ public class GridviewAdapter extends BaseAdapter {
 
         if(color[positionX][positionY] == NORMAL)
         {
-            cell.setBackgroundColor(Color.WHITE);
+//            cell.setBackgroundColor(Color.WHITE);
+            backGround.setBackgroundColor(Color.WHITE);
+        }
+        else if(color[positionX][positionY] == TRANSPARENT)
+        {
+//            cell.setBackgroundColor(Color.WHITE);
+            backGround.setBackgroundColor(Color.TRANSPARENT);
         }
         else if(color[positionX][positionY] == MAIN_CLICKED)
         {
-            cell.setBackgroundColor(Color.RED);
+//            cell.setBackgroundColor(Color.RED);
+            backGround.setBackgroundColor(Color.RED);
         }
         else if(color[positionX][positionY] == SUB_CLICKED)
         {
-            cell.setBackgroundColor(Color.YELLOW);
+//            cell.setBackgroundColor(Color.YELLOW);
+            backGround.setBackgroundColor(Color.YELLOW);
         }
 
         cell.setOnClickListener(new View.OnClickListener() {
@@ -200,14 +224,42 @@ public class GridviewAdapter extends BaseAdapter {
         if(clickedOject.getOrientation()==WordObject.HORIZONTAL
                 &&WordObject.getClickedPositionX()<=clickedOject.startX+clickedOject.getResult().length()-2)
         {
-            lastClickedX++;
+            if(lastClickedX<clickedOject.startX+clickedOject.getResult().length())
+                lastClickedX++;
         }
 
         //Vertical and stop at last digit
         if(clickedOject.getOrientation()==WordObject.VERTICAL
                 &&WordObject.getClickedPositionY()<=clickedOject.startY+clickedOject.getResult().length()-2)
         {
-            lastClickedY++;
+            if(lastClickedY<clickedOject.startY+clickedOject.getResult().length())
+                lastClickedY++;
+        }
+        clickedOject.setClickedPosition(lastClickedX, lastClickedY);
+
+//        onClickCell(WordObject.getClickedPositionX(), WordObject.getClickedPositionY());
+
+        colorSurroundCells(lastClickedX, lastClickedY);
+    }
+
+    public void backClickedPosition()
+    {
+        int lastClickedX=WordObject.getClickedPositionX();
+        int lastClickedY=WordObject.getClickedPositionY();
+        //Horizontal and stop at last digit
+        if(clickedOject.getOrientation()==WordObject.HORIZONTAL
+                &&WordObject.getClickedPositionX()<clickedOject.startX+clickedOject.getResult().length())
+        {
+            if(lastClickedX>clickedOject.startX)
+                lastClickedX--;
+        }
+
+        //Vertical and stop at last digit
+        if(clickedOject.getOrientation()==WordObject.VERTICAL
+                &&WordObject.getClickedPositionY()<clickedOject.startY+clickedOject.getResult().length())
+        {
+            if(lastClickedY>clickedOject.startY)
+                lastClickedY--;
         }
         clickedOject.setClickedPosition(lastClickedX, lastClickedY);
 

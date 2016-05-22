@@ -21,8 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements GridviewAdapter.OnItemGridViewClick{
-    public static final int NUM_OF_COLLUMN = 13;
-    public static final int NUM_OF_ROW = 13;
+    public static final int NUM_OF_COLLUMN = 10;
+    public static final int NUM_OF_ROW = 10;
     public static final int NUM_OF_KEYBOARD_PER_ROW = 10;
     private static GridView gridView;
     private TextView txtView_question;
@@ -170,7 +170,7 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
                 public void onClick(View view) {
                     try {
                         gridViewData[WordObject.getClickedPositionX()][WordObject.getClickedPositionY()] = "";
-//                        adapter.nextClickedPosition();
+                        adapter.backClickedPosition();
                         adapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         Log.e("MainActivity", "Not Clicked any cell yet.");
