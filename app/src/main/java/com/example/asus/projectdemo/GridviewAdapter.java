@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Created by ThangDuong on 12-May-16.
@@ -39,7 +43,10 @@ public class GridviewAdapter extends BaseAdapter {
     ObjectAnimator scaleAnimationY=new ObjectAnimator();
     //Constructor to resetColor values
     WordObjectsManager objManager = WordObjectsManager.getInstance();
+    private DisplayImageOptions opt;
+
     public GridviewAdapter(Activity context, String[][] data) {
+
         this.gridViewClickListener=(OnItemGridViewClick)context;
         this.context = context;
         this.data = data;
@@ -70,6 +77,8 @@ public class GridviewAdapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
+
+
     @Override
     public int getCount() {
 //        Log.e("GridviewAdapter","data.length = "+data.length+" , data[0].length = "+data[0].length);

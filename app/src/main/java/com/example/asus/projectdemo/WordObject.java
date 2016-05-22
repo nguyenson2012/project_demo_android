@@ -27,10 +27,11 @@ public class WordObject {
         clickedPositionY = NOT_CLICKED;
     }
 
-    public WordObject(int x,int y, String question, String result, int ori)
+    public WordObject(int x,int y, String question, String result, int ori,String imageLink)
     {
         this.question = question;
         this.result = result;
+        this.imageLink=imageLink;
         startX=x;
         startY=y;
         orientation = ori;

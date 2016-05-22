@@ -20,6 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 public class MainActivity extends Activity implements GridviewAdapter.OnItemGridViewClick{
     public static final int NUM_OF_COLLUMN = 13;
     public static final int NUM_OF_ROW = 13;
@@ -35,19 +42,35 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
     private Button btCheckAnswer;
     private Button btSolve;
     private Button btClear;
+    private DisplayImageOptions opt;
+    private ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-
+        initImageLoader(getApplicationContext());
+        setupImageDisplayOptions();
         setupGridView();
         setupKeyboard();
 
 //        txtView_question = (TextView)findViewById(R.id.textView);
         imgView_question = (ImageView)findViewById(R.id.imageView);
 
+    }
+
+    private void initImageLoader(Context context) {
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(6 * 1024 * 1024); // 6 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+
+        // Initialize ImageLoader with configuration.
+        imageLoader=ImageLoader.getInstance();
+        imageLoader.init(config.build());
     }
 
     public static int getRowHeight()//for adapter
@@ -182,10 +205,10 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
 
     private void initializeQuestion()
     {
-        objManger.add(new WordObject(1, 0, "I .... a hamburger", "EAT", WordObject.VERTICAL));
-        objManger.add(new WordObject(1, 1, "I have an ", "ARMY", WordObject.HORIZONTAL));
-        objManger.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL));
-        objManger.add(new WordObject(0, 2, "...... up!", "STAND", WordObject.HORIZONTAL));
+        objManger.add(new WordObject(1, 0, "I .... a hamburger", "EAT", WordObject.VERTICAL,"http://i.imgur.com/8qu7nQk.png"));
+        objManger.add(new WordObject(1, 1, "I have an ", "ARMY", WordObject.HORIZONTAL,"http://i.imgur.com/eluOFW6.png"));
+        objManger.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL,"http://i.imgur.com/AlGqiAD.jpg"));
+        objManger.add(new WordObject(0, 2, "...... up!", "STAND", WordObject.HORIZONTAL,"http://i.imgur.com/vOnIjew.jpg"));
     }
     private void setupGridView()
     {
@@ -258,6 +281,10 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         int positionY=position/NUM_OF_COLLUMN;
 //        changeQuestion(positionX,positionY);
         txtView_question.setText(objManger.getObjectAt(positionX,positionY).getQuestion());
+        imageLoader.displayImage(objManger.getObjectAt(positionX,positionY).getImageLink(),imgView_question
+                , opt,
+                new SimpleImageLoadingListener() {
+                });
     }
 
     class KeyboardButton
@@ -326,6 +353,17 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
             }
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void setupImageDisplayOptions() {
+        opt = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.ic_error_48pt)
+                .showImageOnFail(R.drawable.ic_error_48pt)
+                .showImageOnLoading(R.drawable.loading)
+                .cacheInMemory(false)
+                .cacheOnDisk(true)
+                .resetViewBeforeLoading(false)
+                .bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
 }
