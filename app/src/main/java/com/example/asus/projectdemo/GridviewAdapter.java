@@ -1,5 +1,8 @@
 package com.example.asus.projectdemo;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * Created by ThangDuong on 12-May-16.
@@ -29,6 +35,8 @@ public class GridviewAdapter extends BaseAdapter {
     private static WordObject clickedOject = null;
     private OnItemGridViewClick gridViewClickListener;
     private Animation animation;
+    ObjectAnimator scaleAnimationX=new ObjectAnimator();
+    ObjectAnimator scaleAnimationY=new ObjectAnimator();
     //Constructor to resetColor values
     WordObjectsManager objManager = WordObjectsManager.getInstance();
     public GridviewAdapter(Activity context, String[][] data) {
@@ -98,7 +106,8 @@ public class GridviewAdapter extends BaseAdapter {
         }
 
         final Button cell = (Button)gridView.findViewById(R.id.button);
-        final LinearLayout backGround = (LinearLayout)gridView.findViewById(R.id.BGLinear);
+        final TextView textViewNumberQuestion=(TextView)gridView.findViewById(R.id.tvItemSTT);
+        final RelativeLayout backGround = (RelativeLayout)gridView.findViewById(R.id.BGLinear);
         //set Row Height
         cell.setMinimumHeight(0);
         cell.setHeight(MainActivity.getRowHeight());
@@ -124,10 +133,12 @@ public class GridviewAdapter extends BaseAdapter {
         else {
 //            cell.setVisibility(View.VISIBLE);
             cell.setText(data[positionX][positionY]);
+            textViewNumberQuestion.setText("1");
 
             if(!isAnimation[positionX][positionY])
             {
-                backGround.startAnimation(animation);
+                //backGround.startAnimation(animation);
+                startScaleAnimation(gridView,1000+positionX*250+positionY*50);
                 isAnimation[positionX][positionY]=true;
             }
 //            cell.setTextSize(15);
@@ -265,7 +276,25 @@ public class GridviewAdapter extends BaseAdapter {
 
 //        onClickCell(WordObject.getClickedPositionX(), WordObject.getClickedPositionY());
 
-        colorSurroundCells(lastClickedX,lastClickedY);
+        colorSurroundCells(lastClickedX, lastClickedY);
+    }
+
+    private void settingAnimation() {
+        scaleAnimationX.setStartDelay(0);
+        scaleAnimationX.setRepeatCount(0);
+        scaleAnimationX.setRepeatMode(ValueAnimator.REVERSE);
+        scaleAnimationX.setInterpolator(new LinearInterpolator());
+        scaleAnimationY.setStartDelay(0);
+        scaleAnimationY.setRepeatCount(0);
+        scaleAnimationY.setRepeatMode(ValueAnimator.REVERSE);
+        scaleAnimationY.setInterpolator(new LinearInterpolator());
+    }
+    private void startScaleAnimation(View view,int duration){
+        scaleAnimationX=ObjectAnimator.ofFloat(view,"scaleX",new float[]{0.5f,1.0f}).setDuration(duration);
+        scaleAnimationY=ObjectAnimator.ofFloat(view,"scaleY",new float[]{0.5f,1.0f}).setDuration(duration);
+        final AnimatorSet animation = new AnimatorSet();
+        ((AnimatorSet) animation).playTogether(scaleAnimationX, scaleAnimationY);
+        animation.start();
     }
 
     public interface OnItemGridViewClick{
