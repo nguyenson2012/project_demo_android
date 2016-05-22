@@ -56,7 +56,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentDrawer.Fr
                         // TODO Handle item click
                         Intent intent=new Intent(HomeActivity.this,MainActivity.class);
                         startActivity(intent);
-                        overridePendingTransition(R.anim.right_in,0);
                     }
                 })
         );
