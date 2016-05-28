@@ -3,9 +3,11 @@ package com.example.asus.projectdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +35,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 public class MainActivity extends Activity implements GridviewAdapter.OnItemGridViewClick{
     public int PARENT_VERTICAL_MARGIN;
+    public int LINE_HEIGHT;
     public static final int AD_HEIGHT = 50;
     public static final int NUM_OF_COLLUMN = 10;
     public static final int NUM_OF_ROW = NUM_OF_COLLUMN;
@@ -77,10 +80,13 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         setupImageDisplayOptions();
         setupGridView();
 
-        PARENT_VERTICAL_MARGIN = (screenHeight - gridView.getMinimumHeight() - mAdView.getMinimumHeight() - screenWidth/2)/12;
+        LINE_HEIGHT = screenWidth/13;
+        PARENT_VERTICAL_MARGIN = (screenHeight - gridView.getMinimumHeight() - mAdView.getMinimumHeight() - 5*LINE_HEIGHT)/12;
+//        if(PARENT_VERTICAL_MARGIN<1)
+//            PARENT_VERTICAL_MARGIN = 1;
         setupKeyboard();
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, screenWidth/10);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LINE_HEIGHT);
         params.setMargins(0,PARENT_VERTICAL_MARGIN,0,PARENT_VERTICAL_MARGIN);
         txtView_question = (TextView)findViewById(R.id.textViewQuestion);
         txtView_question.setLayoutParams(params);
@@ -163,10 +169,11 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         btCheckAnswer=(Button)findViewById(R.id.btcheckAnswer);
         btSolve=(Button)findViewById(R.id.btSolve);
         btClear=(Button)findViewById(R.id.btClear);
-        txtView_question=(TextView)findViewById(R.id.textViewQuestion);
+//        txtView_question=(TextView)findViewById(R.id.textViewQuestion);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screenWidth / 5, screenWidth/10);
-        params.setMargins(PARENT_VERTICAL_MARGIN*3, PARENT_VERTICAL_MARGIN*3, PARENT_VERTICAL_MARGIN*3, PARENT_VERTICAL_MARGIN*3);
+        Log.e("LOL","PARENT_VERTICAL_MARGIN = "+PARENT_VERTICAL_MARGIN);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screenWidth / 5, LINE_HEIGHT);
+        params.setMargins(LINE_HEIGHT/2, PARENT_VERTICAL_MARGIN, LINE_HEIGHT/2, PARENT_VERTICAL_MARGIN);
 
         btCheckAnswer.setLayoutParams(params);
         btSolve.setLayoutParams(params);
@@ -175,9 +182,9 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         int BTN_KEYBOARD_MARGIN = screenWidth/(6*NUM_OF_KEYBOARD_PER_ROW) ;
         int tempWidth = (screenWidth - BTN_KEYBOARD_MARGIN *(NUM_OF_KEYBOARD_PER_ROW+1))/ NUM_OF_KEYBOARD_PER_ROW;
         //change left and right margin according to the size of button
-        if(screenWidth/10<tempWidth)//screenWidth/10 is the height of the line
+        if(LINE_HEIGHT<tempWidth)
         {
-            BTN_KEYBOARD_MARGIN = (screenWidth-NUM_OF_KEYBOARD_PER_ROW*screenWidth/10)/(2*(NUM_OF_KEYBOARD_PER_ROW+1));
+            BTN_KEYBOARD_MARGIN = (screenWidth-NUM_OF_KEYBOARD_PER_ROW*LINE_HEIGHT)/(2*(NUM_OF_KEYBOARD_PER_ROW+1));
         }
         else
         {
@@ -186,9 +193,9 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         for (int i = 0; i < keyboard_btn.length;i++)
         {
             //Make button square
-            if(screenWidth/10<tempWidth)
+            if(LINE_HEIGHT<tempWidth)
                 keyboard_btn[i].button = setLayoutButton(keyboard_btn[i].button
-                        ,screenWidth/10,screenWidth/10, BTN_KEYBOARD_MARGIN);
+                        ,LINE_HEIGHT,LINE_HEIGHT, BTN_KEYBOARD_MARGIN);
             else
                 keyboard_btn[i].button = setLayoutButton(keyboard_btn[i].button
                         ,tempWidth,tempWidth, BTN_KEYBOARD_MARGIN);
@@ -200,7 +207,7 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
     private Button setLayoutButton(Button v,int Width, int height,int margin)
     {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Width, height);
-        params.setMargins(margin,0,margin,0);
+        params.setMargins(margin, 0, margin, 0);
         v.setLayoutParams(params);
         return v;
     }
@@ -271,10 +278,10 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
 
     private void initializeQuestion()
     {
-        objManger.add(new WordObject(1, 0, "I .... a hamburger", "EAT", WordObject.VERTICAL,"http://i.imgur.com/8qu7nQk.png"));
-        objManger.add(new WordObject(1, 1, "I have an ", "ARMY", WordObject.HORIZONTAL,"http://i.imgur.com/eluOFW6.png"));
-        objManger.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL,"http://i.imgur.com/AlGqiAD.jpg"));
-        objManger.add(new WordObject(0, 2, "...... up!", "STAND", WordObject.HORIZONTAL,"http://i.imgur.com/vOnIjew.jpg"));
+        objManger.add(new WordObject(1, 0, "I .... a hamburger", "EAT", WordObject.VERTICAL, "http://i.imgur.com/8qu7nQk.png"));
+        objManger.add(new WordObject(1, 1, "I have an ", "ARMY", WordObject.HORIZONTAL, "http://i.imgur.com/eluOFW6.png"));
+        objManger.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL, "http://i.imgur.com/AlGqiAD.jpg"));
+        objManger.add(new WordObject(0, 2, "...... up!", "STAND", WordObject.HORIZONTAL, "http://i.imgur.com/vOnIjew.jpg"));
     }
     private void setupGridView()
     {
@@ -310,9 +317,7 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
     }
     private void setGridViewBG()
     {
-        Drawable bgDrawable = getResources().getDrawable(R.drawable.gridview_bg);
-
-        //Scale the images
+        Drawable bgDrawable = ResourcesCompat.getDrawable(getResources(),R.drawable.gridview_bg,null);//Scale the images
         Bitmap bitmap = ((BitmapDrawable) bgDrawable).getBitmap();
         Drawable drawable = new BitmapDrawable(
                 getResources(), Bitmap.createScaledBitmap(bitmap,
@@ -321,8 +326,6 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
                 true)
         );
         gridView.setBackground(drawable);
-
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
