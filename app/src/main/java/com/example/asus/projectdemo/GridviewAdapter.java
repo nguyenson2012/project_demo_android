@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
+
 /**
  * Created by ThangDuong on 12-May-16.
  */
@@ -37,6 +39,7 @@ public class GridviewAdapter extends BaseAdapter {
     public static final int MAIN_CLICKED = 3;
     public static final int SUB_CLICKED = 4;
     public static final int TRANSPARENT = 5;
+    private ArrayList<WordObject> listWord=new ArrayList<WordObject>();
     private static WordObject clickedOject = null;
     private OnItemGridViewClick gridViewClickListener;
     private Animation animation;
@@ -147,7 +150,12 @@ public class GridviewAdapter extends BaseAdapter {
         else {
 //            cell.setVisibility(View.VISIBLE);
             cell.setText(data[positionX][positionY]);
-            textViewNumberQuestion.setText("1");
+            if(listWord.size()>0){
+                for(WordObject wordObject:listWord)
+                    if(positionX==wordObject.startX&&positionY==wordObject.startY)
+                        textViewNumberQuestion.setText("1");
+            }
+
 
             if(!isAnimation[positionX][positionY])
             {
@@ -309,6 +317,9 @@ public class GridviewAdapter extends BaseAdapter {
         final AnimatorSet animation = new AnimatorSet();
         ((AnimatorSet) animation).playTogether(scaleAnimationX, scaleAnimationY);
         animation.start();
+    }
+    public void setUpListWord(ArrayList<WordObject> listWord){
+        this.listWord=listWord;
     }
 
     public interface OnItemGridViewClick{

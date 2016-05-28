@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
@@ -53,6 +56,8 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
@@ -294,6 +299,7 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         }
 
         adapter = new GridviewAdapter(this, gridViewData);
+        adapter.setUpListWord(objManger.getObjectArrayList());
         gridView = (GridView) findViewById(R.id.layout_gridview);
         gridView.setMinimumHeight(screenWidth);
         gridView.setAdapter(adapter);
@@ -315,6 +321,8 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
                 true)
         );
         gridView.setBackground(drawable);
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -343,11 +351,11 @@ public class MainActivity extends Activity implements GridviewAdapter.OnItemGrid
         int positionX=position%NUM_OF_COLLUMN;
         int positionY=position/NUM_OF_COLLUMN;
 //        changeQuestion(positionX,positionY);
-        txtView_question.setText(objManger.getObjectAt(positionX,positionY).getQuestion());
+        txtView_question.setText(objManger.getObjectAt(positionX, positionY).getQuestion());
         imageLoader.displayImage(objManger.getObjectAt(positionX,positionY).getImageLink(),imgView_question
-                , opt,
-                new SimpleImageLoadingListener() {
-                });
+                , opt,new SimpleImageLoadingListener() {
+        }
+                );
     }
 
     class KeyboardButton
