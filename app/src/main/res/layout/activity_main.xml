@@ -1,40 +1,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="1dp"
+    android:paddingRight="1dp"
+    android:paddingTop="1dp"
+    android:paddingBottom="1dp"
+    tools:context=".MainActivity"
     android:orientation="vertical"
     android:layout_weight="10">
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_home_footer"
+        android:layout_gravity="center">
+    </com.google.android.gms.ads.AdView>
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/RL_gridview">
+
+
+    </RelativeLayout>-->
     <GridView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/layout_gridview"
-        android:layout_weight="5"
         android:verticalSpacing="2dp"
         android:horizontalSpacing="2dp"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginBottom="@dimen/vertical_margin">
         <Button
             android:id="@+id/btcheckAnswer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/check_answer"/>
+            android:text="@string/check_answer"
+            android:padding="0dp"
+            style="@style/BlueButton"
+            android:layout_marginRight="1dp"
+            android:layout_marginLeft="1dp"/>
         <Button
             android:id="@+id/btSolve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/solve"/>
+            android:text="@string/solve"
+            android:padding="0dp"
+            style="@style/BlueButton"
+            android:layout_marginRight="1dp"
+            android:layout_marginLeft="1dp"/>
         <Button
             android:id="@+id/btClear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/clear"/>
+            android:text="@string/clear"
+            android:padding="0dp"
+            style="@style/BlueButton"
+            android:layout_marginRight="1dp"
+            android:layout_marginLeft="1dp"/>
     </LinearLayout>
 
     <!--<android.support.v7.widget.RecyclerView
@@ -44,15 +77,16 @@
         />-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1" >
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginBottom="@dimen/vertical_margin" >
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_gravity="center"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:src="@android:drawable/btn_star_big_on"/>
 
         <TextView
@@ -71,6 +105,8 @@
         android:orientation="vertical"
         android:id="@+id/layout_keyboard"
         android:padding="0dp"
+        android:layout_marginTop="@dimen/button_blue_vertical_margin"
+        android:layout_marginBottom="@dimen/button_blue_vertical_margin"
         >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -78,69 +114,99 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:id="@+id/layout_kb_row1"
-            android:layout_marginBottom="-3dp"
-            android:layout_marginTop="-3dp"
-            android:padding="0dp">
+            android:layout_marginBottom="@dimen/button_blue_vertical_margin"
+            android:layout_marginTop="@dimen/button_blue_vertical_margin"
+            android:padding="5dp">
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnQ"
-                android:text="Q"/>
+                android:text="Q"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnW"
-                android:text="W"/>
+                android:text="W"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnE"
-                android:text="E"/>
+                android:text="E"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnR"
-                android:text="R"/>
+                android:text="R"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnT"
-                android:text="T"/>
+                android:text="T"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnY"
-                android:text="Y"/>
+                android:text="Y"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnU"
-                android:text="U"/>
+                android:text="U"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnI"
-                android:text="I"/>
+                android:text="I"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnO"
-                android:text="O"/>
+                android:text="O"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnP"
-                android:text="P"/>
+                android:text="P"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
         </LinearLayout>
 
         <LinearLayout
@@ -149,63 +215,90 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:id="@+id/layout_kb_row2"
-            android:layout_marginBottom="-3dp"
-            android:layout_marginTop="-3dp"
-            android:padding="0dp">
+            android:layout_marginBottom="@dimen/button_blue_vertical_margin"
+            android:layout_marginTop="@dimen/button_blue_vertical_margin"
+            android:padding="5dp">
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnA"
-                android:text="A"/>
+                android:text="A"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnS"
-                android:text="S"/>
+                android:text="S"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnD"
-                android:text="D"/>
+                android:text="D"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnF"
-                android:text="F"/>
+                android:text="F"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnG"
-                android:text="G"/>
+                android:text="G"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnH"
-                android:text="H"/>
+                android:text="H"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnJ"
-                android:text="J"/>
+                android:text="J"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnK"
-                android:text="K"/>
+                android:text="K"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnL"
-                android:text="L"/>
+                android:text="L"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
         </LinearLayout>
 
         <LinearLayout
@@ -214,57 +307,81 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:id="@+id/layout_kb_row3"
-            android:layout_marginBottom="-3dp"
-            android:layout_marginTop="-3dp"
-            android:padding="0dp">
+            android:layout_marginBottom="@dimen/button_blue_vertical_margin"
+            android:layout_marginTop="@dimen/button_blue_vertical_margin"
+            android:padding="5dp">
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnZ"
-                android:text="Z"/>
+                android:text="Z"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnX"
-                android:text="X"/>
+                android:text="X"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnC"
-                android:text="C"/>
+                android:text="C"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnV"
-                android:text="V"/>
+                android:text="V"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnB"
-                android:text="B"/>
+                android:text="B"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnN"
-                android:text="N"/>
+                android:text="N"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="35dp"
                 android:padding="0dp"
                 android:id="@+id/btnM"
-                android:text="M"/>
+                android:text="M"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
             <Button
-            android:layout_height="wrap_content"
-            android:layout_width="35dp"
-            android:padding="0dp"
-            android:id="@+id/btnDel"
-            android:text="Del"/>
+                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:padding="0dp"
+                android:id="@+id/btnDel"
+                android:text="Del"
+                style="@style/BlueButton"
+                android:layout_marginRight="@dimen/button_blue_horizontal_margin"
+                android:layout_marginLeft="@dimen/button_blue_horizontal_margin"/>
         </LinearLayout>
     </LinearLayout>
 

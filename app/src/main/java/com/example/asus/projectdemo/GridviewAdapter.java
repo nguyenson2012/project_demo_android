@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class GridviewAdapter extends BaseAdapter {
         }
         resetColor();
         animation = AnimationUtils.loadAnimation(context, R.anim.start_gridview_anim);
+        onClickCell(objManager.get(0).startX,objManager.get(0).startY);
     }
     public void resetColor()
     {
@@ -118,8 +120,11 @@ public class GridviewAdapter extends BaseAdapter {
         final TextView textViewNumberQuestion=(TextView)gridView.findViewById(R.id.tvItemSTT);
         final RelativeLayout backGround = (RelativeLayout)gridView.findViewById(R.id.BGLinear);
         //set Row Height
+        DisplayMetrics metrics = new DisplayMetrics();
+        metrics = context.getResources().getDisplayMetrics();
         cell.setMinimumHeight(0);
-        cell.setHeight(MainActivity.getRowHeight());
+//        cell.setHeight(MainActivity.getRowHeight());
+        cell.setHeight((int) ((metrics.widthPixels / MainActivity.NUM_OF_ROW) * 0.9));
 
         //set default text
 //        cell.setText(Integer.toString(position));
