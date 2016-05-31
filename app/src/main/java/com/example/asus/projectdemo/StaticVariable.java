@@ -6,6 +6,7 @@ import com.example.asus.projectdemo.model.Stage;
 import com.example.asus.projectdemo.model.WordObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Asus on 5/30/2016.
@@ -13,12 +14,14 @@ import java.util.ArrayList;
 public class StaticVariable {
     private static StaticVariable instance;
     private static ArrayList<Stage> allStage;
-    private static ArrayList<Bitmap> listBitmapImageStageAction;
+    private static HashMap<Integer, ArrayList<Bitmap>> bitMapImageStageMap;
 
     public StaticVariable() {
-        listBitmapImageStageAction = new ArrayList<Bitmap>();
+
         allStage = new ArrayList<Stage>();
+        bitMapImageStageMap = new HashMap<Integer, ArrayList<Bitmap>>();
         loadAllStage();
+        loadbitMapImageStage();
     }
 
     public static StaticVariable getInstance() {
@@ -28,12 +31,16 @@ public class StaticVariable {
         return instance;
     }
 
-    public ArrayList<Bitmap> getListBitmapImageStageAction() {
-        return listBitmapImageStageAction;
+    public static HashMap<Integer, ArrayList<Bitmap>> getBitMapImageStageMap() {
+        return bitMapImageStageMap;
     }
 
-    public void setListBitmapImageStageAction(ArrayList<Bitmap> listBitmapImageStageAction) {
-        StaticVariable.listBitmapImageStageAction = listBitmapImageStageAction;
+    private void loadbitMapImageStage() {
+
+        for (int i = 1; i <= allStage.size(); i++) {
+            ArrayList<Bitmap> listBitmapImageStage = new ArrayList<Bitmap>();
+            bitMapImageStageMap.put(i, listBitmapImageStage);
+        }
     }
 
     public void loadAllStage() {
@@ -58,7 +65,7 @@ public class StaticVariable {
         listQuestion.add(new WordObject(0, 1, "It's a ......", "DUCK", WordObject.HORIZONTAL, "http://i.imgur.com/yDS5nPF.png"));
         listQuestion.add(new WordObject(2, 1, "It's a ......", "CHICKEN", WordObject.VERTICAL, "http://i.imgur.com/RQYVZfB.png"));
         listQuestion.add(new WordObject(2, 4, "It's a ......", "COW", WordObject.HORIZONTAL, "http://i.imgur.com/HXNjbls.png"));
-        listQuestion.add(new WordObject(0, 6, "It's a ......", "SHEEP", WordObject.HORIZONTAL, "http://i.imgur.com/HXNjbls.png"));
+        listQuestion.add(new WordObject(0, 6, "It's a ......", "SHEEP", WordObject.HORIZONTAL, "http://i.imgur.com/qDXiwyk.png"));
         listQuestion.add(new WordObject(0, 3, "It's a ......", "MOUSE", WordObject.VERTICAL, "http://i.imgur.com/MKFWSjp.png"));
         listQuestion.add(new WordObject(4, 6, "It's a ......", "PIG", WordObject.VERTICAL, "http://i.imgur.com/DC3cOkX.jpg"));
         Stage stageAnimal = new Stage("http://i.imgur.com/Wl3wiPK.png", 2, listQuestion, "Animals on the farm");
