@@ -1,5 +1,6 @@
 package com.example.asus.projectdemo;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.example.asus.projectdemo.model.Stage;
@@ -56,7 +57,7 @@ public class StaticVariable {
         listQuestion.add(new WordObject(5, 2, "What fruit is it?", "LEMON", WordObject.VERTICAL, "http://i.imgur.com/byGWcLj.png"));
         listQuestion.add(new WordObject(3, 6, "What fruit is it?", "BANANA", WordObject.HORIZONTAL, "http://i.imgur.com/JPjPc9l.png"));
         listQuestion.add(new WordObject(8, 4, "What fruit is it?", "PEACH", WordObject.VERTICAL, "http://i.imgur.com/cWynn4H.png"));
-        Stage stageFruit = new Stage("http://i.imgur.com/B9YVtuG.png", 3, listQuestion, "Fruits");
+        Stage stageFruit = new Stage("http://i.imgur.com/B9YVtuG.png", 3, listQuestion, "Fruits",0);
         allStage.add(stageFruit);
     }
 
@@ -68,7 +69,7 @@ public class StaticVariable {
         listQuestion.add(new WordObject(0, 6, "It's a ......", "SHEEP", WordObject.HORIZONTAL, "http://i.imgur.com/qDXiwyk.png"));
         listQuestion.add(new WordObject(0, 3, "It's a ......", "MOUSE", WordObject.VERTICAL, "http://i.imgur.com/MKFWSjp.png"));
         listQuestion.add(new WordObject(4, 6, "It's a ......", "PIG", WordObject.VERTICAL, "http://i.imgur.com/DC3cOkX.jpg"));
-        Stage stageAnimal = new Stage("http://i.imgur.com/Wl3wiPK.png", 2, listQuestion, "Animals on the farm");
+        Stage stageAnimal = new Stage("http://i.imgur.com/Wl3wiPK.png", 2, listQuestion, "Animals on the farm",0);
         allStage.add(stageAnimal);
     }
 
@@ -78,7 +79,7 @@ public class StaticVariable {
         listQuestion.add(new WordObject(1, 1, "I have an ", "ARMY", WordObject.HORIZONTAL, "http://i.imgur.com/eluOFW6.png"));
         listQuestion.add(new WordObject(0, 0, "I ..... a book", "READ", WordObject.HORIZONTAL, "http://i.imgur.com/AlGqiAD.jpg"));
         listQuestion.add(new WordObject(0, 2, "...... up!", "STAND", WordObject.HORIZONTAL, "http://i.imgur.com/vOnIjew.jpg"));
-        Stage stageAction = new Stage("http://i.imgur.com/oe3PGwC.png", 1, listQuestion, "Action verb");
+        Stage stageAction = new Stage("http://i.imgur.com/oe3PGwC.png", 1, listQuestion, "Action verb",0);
         allStage.add(stageAction);
     }
 
